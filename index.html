@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- Load a modern UI font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css" />
 <title>Meevis Solar Panel</title>
 </head>
@@ -28,23 +30,20 @@
   </nav>
 </header>
 
+      <!-- Hero Section -->
+  <div class="hero-wrapper">
+  <section class="hero">
+  <div class="hero-bg">
+    <img src="sidewalks.png" alt="Sidewalk" class="hero-img">
+  </div>
+  <div class="hero-content">
+    <h1 class="username-greeting">Welcome, <span id="usernameDisplay">User</span>!</h1>
+  </div>
+</section>
+
+</div>
+
 <main>
-  <!-- Main Visual Area -->
-  <section class="visual-area">
-
-    <div class="visual-stage">
-      <div class="panel-3d">
-          <img src="sidewalks.png" alt="Solar Panel Array" class="panel-img">
-      </div>
-      <!-- vertical controls -->
-      <div class="visual-controls">
-        <button class="ctrl">+</button>
-        <button class="ctrl">−</button>
-      </div>
-    </div>
-  </section>
-
-
 
   <!-- Data Grid -->
   <section class="data-grid-container">
@@ -92,7 +91,6 @@
 
     <!-- Add other 5 data cards here -->
   </section>
-</main>
 
 <!-- Overlays -->
 <div class="card-overlay" id="popupOverlay1">
@@ -132,5 +130,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
 <script src="app.js"></script>
 <script src="arduino.js"></script>
+<script src="scroll.js"></script>
 </body>
 </html>

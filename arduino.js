@@ -27,9 +27,30 @@ document.addEventListener('DOMContentLoaded', () => {
           let lines = buffer.split("\n"); // split on newline
           buffer = lines.pop(); // last line may be incomplete
           lines.forEach(line => {
-            const match = line.match(/Measured Voltage: ([\d.]+)/);
-            if (match) {
-              arduinoValue.textContent = match[1] + " V";
+            const trimmed = line.trim();
+            if (!trimmed) return;
+
+            // Prefer explicit 'Measured Voltage: <num>' pattern
+            const measuredMatch = trimmed.match(/Measured Voltage:\s*([+-]?\d+(?:\.\d+)?)/i);
+            if (measuredMatch) {
+              const val = parseFloat(measuredMatch[1]);
+              arduinoValue.textContent = val.toFixed(2) + " V";
+              return;
+            }
+
+            // If the sketch sends just a raw number like '0.32', accept that too
+            const numOnlyMatch = trimmed.match(/^([+-]?\d+(?:\.\d+)?)$/);
+            if (numOnlyMatch) {
+              const val = parseFloat(numOnlyMatch[1]);
+              arduinoValue.textContent = val.toFixed(2) + " V";
+              return;
+            }
+
+            // As a fallback, extract the first number found anywhere in the line
+            const anyNum = trimmed.match(/([+-]?\d+(?:\.\d+)?)/);
+            if (anyNum) {
+              const val = parseFloat(anyNum[1]);
+              arduinoValue.textContent = val.toFixed(2) + " V";
             }
           });
         }
