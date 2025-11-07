@@ -55,42 +55,181 @@
   <div class="metric" id="arduinoValue">-- V</div>
   <div class="mini-chart">[Live]</div>
 </article>
-    <!-- Current Power -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay1">
-      <header class="card-top"><h3>Current Power</h3></header>
-      <div class="metric">5.48 kW</div>
-      <div class="breakdown">
-        <div>Solar <strong>2.74</strong></div>
-        <div>Grid <strong>2.74</strong></div>
-        <div>Battery <strong>0.34</strong></div>
+ 
+  
+
+    <!-- Card 1: Power Generated Today -->
+    <article class="data-card popup-trigger" data-overlay="powerTodayOverlay">
+      <header class="card-top">
+        <h3>Power generated today</h3>
+      </header>
+      <div class="metric-large">
+        <span class="handwritten">4.000</span> kWh
       </div>
-      <canvas id="currentPowerGraph" class="mini-chart"></canvas>
+      <div class="card-footer">
+        <span class="trend up">↑ 30%</span>
+        <span class="trend down">↓ 20%</span>
+      </div>
     </article>
 
-    <!-- Production -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay2">
-      <header class="card-top"><h3>Production</h3></header>
-      <div class="metric">28.5 kW</div>
-      <div class="progress-bar"><div class="progress" style="width:38%"></div></div>
-      <div class="progress-label">Low</div>
+    <!-- Card 2: Weekly Average -->
+    <article class="data-card popup-trigger" data-overlay="weeklyAverageOverlay">
+      <header class="card-top">
+        <h3>Weekly average</h3>
+      </header>
+      <div class="chart-container">
+        <canvas id="weeklyAverageChart"></canvas>
+      </div>
     </article>
 
-    <!-- Consumption -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay3">
-      <header class="card-top"><h3>Consumption</h3></header>
-      <div class="metric">56.4 kWh</div>
-      <div class="progress-bar"><div class="progress" style="width:65%"></div></div>
-      <div class="progress-label">Normal</div>
-    </article>
-        <article class="data-card popup-trigger" data-overlay="popupOverlay3">
-      <header class="card-top"><h3>Consumption</h3></header>
-      <div class="metric">56.4 kWh</div>
-      <div class="progress-bar"><div class="progress" style="width:65%"></div></div>
-      <div class="progress-label">Normal</div>
+    <!-- Card 3: Achievement System -->
+    <article class="data-card popup-trigger" data-overlay="achievementsOverlay">
+      <header class="card-top">
+        <h3>Achievement system</h3>
+      </header>
+      <div class="progress-group">
+        <div class="progress-item">
+          <label>Steps</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 80%;"></div>
+          </div>
+          <span>8000/10.000</span>
+        </div>
+        <div class="progress-item">
+          <label>Energy</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 75%;"></div>
+          </div>
+          <span>7500/10.000 kWh</span>
+        </div>
+        <div class="progress-item">
+          <label>Money Saved</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 70%;"></div>
+          </div>
+          <span>7000/10.000 $</span>
+        </div>
+        <div class="progress-item">
+          <label>CO₂ Reduction</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 30%;"></div>
+          </div>
+          <span>3000/10.000 kg</span>
+        </div>
+      </div>
     </article>
 
-    <!-- Add other 5 data cards here -->
+    <!-- Card 4: Energy Per Step -->
+    <article class="data-card popup-trigger" data-overlay="energyStepOverlay">
+      <div class="card-content-icon">
+        <div class="battery-icon"></div>
+        <p>Amount of energy produced per step: <strong>30 Wh</strong></p>
+      </div>
+    </article>
+
+    <!-- Card 5: Stored vs Used Energy -->
+    <article class="data-card popup-trigger" data-overlay="storedUsedOverlay">
+      <header class="card-top">
+        <div class="lightning-icon"></div>
+      </header>
+      <div class="dual-metrics">
+        <div class="metric-item">
+          <h4>Stored Energy</h4>
+          <div class="metric-value">350 <span class="unit">kWh</span></div>
+          <span class="trend up">+30%</span>
+        </div>
+        <div class="metric-item">
+          <h4>Used Energy</h4>
+          <div class="metric-value">250 <span class="unit">kWh</span></div>
+          <span class="trend down">+25%</span>
+        </div>
+      </div>
+    </article>
   </section>
+
+<!-- Overlays for new cards -->
+<div class="card-overlay" id="powerTodayOverlay">
+  <div class="popup-card">
+    <button class="closePopup">×</button>
+    <h2>Power Generated Today</h2>
+    <canvas id="powerTodayChart" height="150"></canvas>
+    <p>Today’s production is 30% higher than yesterday.</p>
+  </div>
+</div>
+
+<div class="card-overlay" id="weeklyAverageOverlay">
+  <div class="popup-card">
+    <button class="closePopup">×</button>
+    <h2>Weekly Average</h2>
+    <canvas id="weeklyAverageDetailChart" height="150"></canvas>
+    <div class="stats-area">
+      <p>Best Day: Friday</p>
+      <p>Average kWh/day: 4.5</p>
+      <p>Change vs last week: +15%</p>
+    </div>
+  </div>
+</div>
+
+<div class="card-overlay" id="achievementsOverlay">
+  <div class="popup-card">
+    <button class="closePopup">×</button>
+    <h2>Achievement System</h2>
+    <!-- Larger progress bars can be styled in CSS, or you can add a class -->
+    <div class="progress-group expanded">
+        <div class="progress-item">
+          <label>Steps</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 80%;"></div>
+          </div>
+          <span>8000/10.000</span>
+        </div>
+        <div class="progress-item">
+          <label>Energy</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 75%;"></div>
+          </div>
+          <span>7500/10.000 kWh</span>
+        </div>
+        <div class="progress-item">
+          <label>Money Saved</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 70%;"></div>
+          </div>
+          <span>7000/10.000 $</span>
+        </div>
+        <div class="progress-item">
+          <label>CO₂ Reduction</label>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-inner" style="width: 30%;"></div>
+          </div>
+          <span>3000/10.000 kg</span>
+        </div>
+    </div>
+    <canvas id="achievementsBarChart" height="150"></canvas>
+    <p>You have reached 80% of your step goal.</p>
+  </div>
+</div>
+
+<div class="card-overlay" id="energyStepOverlay">
+  <div class="popup-card">
+    <button class="closePopup">×</button>
+    <h2>Energy Per Step</h2>
+    <canvas id="energyStepChart" height="150"></canvas>
+    <p>On average, one step currently produces 30 Wh.</p>
+  </div>
+</div>
+
+<div class="card-overlay" id="storedUsedOverlay">
+  <div class="popup-card">
+    <button class="closePopup">×</button>
+    <h2>Stored vs Used Energy</h2>
+    <div class="chart-row">
+        <canvas id="storedUsedDoughnutChart" height="120" width="120"></canvas>
+        <canvas id="storedEnergyLineChart" height="120"></canvas>
+    </div>
+    <p>An explanation of stored vs. used energy.</p>
+  </div>
+</div>
 
 <!-- Overlays -->
 <div class="card-overlay" id="popupOverlay1">

@@ -1,4 +1,7 @@
-  :root{
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
+
+:root{
     --color-background-primary: #0a0a0a;
     --color-widget-bg: #ffffff;
     --color-text-primary: #111;
@@ -337,18 +340,150 @@
   }
 
   .annotation-line {
-  position: absolute;
-  color: #fff;
+    position: absolute;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .annotation-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+/* New Card Styles */
+.metric-large {
+  font-size: 2.5rem;
+  font-weight: 300;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.handwritten {
+  font-family: 'Caveat', cursive; /* Needs a handwritten font, add to HTML head */
+  font-weight: 700;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.9rem;
+}
+
+.trend {
   font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.annotation-line.visible {
-  opacity: 1;
-  transform: translateY(0);
+.trend.up {
+  color: #28a745;
 }
 
+.trend.down {
+  color: #dc3545;
+}
+
+.chart-container {
+  height: 100%;
+  width: 100%;
+}
+
+.progress-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.progress-item label {
+  font-weight: 600;
+}
+
+.progress-bar-wrapper {
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  background-color: #28a745;
+  height: 100%;
+  border-radius: 0.25rem;
+}
+
+.card-content-icon {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.battery-icon {
+  width: 24px;
+  height: 40px;
+  border: 3px solid #111;
+  border-radius: 4px;
+  position: relative;
+}
+
+.battery-icon::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background-color: #111;
+  border-radius: 2px 2px 0 0;
+}
+
+.dual-metrics {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.metric-item h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.unit {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.lightning-icon {
+  /* Simple CSS lightning icon */
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid var(--color-accent-solar);
+  transform: rotate(35deg);
+  margin: 0 auto;
+}
+
+.chart-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
