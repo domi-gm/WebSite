@@ -7,152 +7,100 @@
 <title>Meevis Solar Panel</title>
 </head>
 <body>
-<header>
-  <div class="logo">
-    <img src="logo.png" alt="Logo" class="logo-img" />
+
+<header class="site-header">
+  <!-- Logo + Username -->
+  <div class="logo-user">
+    <img src="logo.png" alt="Meevis Solar" class="logo-img">
+    <span class="username">Meevis Nederweerzt</span>
   </div>
-  <nav>
-    <button>Overview</button>
+
+  <!-- Centered nav -->
+  <nav class="main-nav" role="navigation" aria-label="Main">
+    <button class="active">Overview</button>
     <button>Analytics</button>
     <button>Monitoring</button>
   </nav>
-  <div class="user">Meevis Nederweerzt</div>
 </header>
 
-<!-- Cards with buttons to open overlays -->
-<div class="bottom-container">
-  <!-- Card 1: Current Power -->
-  <div class="card" id="current-power-card">
-    <div class="card-header">
-      <span>Current Power</span>
-      <button class="popupbutton" data-overlay="popupOverlay1">Show Details</button>
+<main>
+  <!-- Main Visual Area -->
+  <section class="visual-area">
+    <div class="visual-header">
+      <h1>Meevis Solar Panel</h1>
+      <div class="site-id">ID 449836</div>
     </div>
-    <div class="card-content">
-      <div class="value">5.48</div>
-      <div class="labels">
-        <div>Solar</div>
-        <div>Grid</div>
-        <div>Battery</div>
+
+    <div class="visual-stage">
+      <div class="panel-3d">[3D Solar Panel Placeholder]</div>
+      <!-- vertical controls -->
+      <div class="visual-controls">
+        <button class="ctrl">+</button>
+        <button class="ctrl">−</button>
       </div>
     </div>
-    <div class="trend-graph">[Graph Placeholder]</div>
-  </div>
+  </section>
 
-  <!-- Card 2: Production -->
-  <div class="card" id="production-card">
-    <div class="card-header">
-      <span>Production</span>
-      <button class="popupbutton" data-overlay="popupOverlay2">Show Details</button>
-    </div>
-    <div class="card-content">
-      <div class="value">28.5</div>
-    </div>
-    <div class="trend-graph">[Graph Placeholder]</div>
-  </div>
+  <!-- Data Grid -->
+  <section class="data-grid-container">
+    <!-- Current Power -->
+    <article class="data-card popup-trigger" data-overlay="popupOverlay1">
+      <header class="card-top"><h3>Current Power</h3></header>
+      <div class="metric">5.48 kW</div>
+      <div class="breakdown">
+        <div>Solar <strong>2.74</strong></div>
+        <div>Grid <strong>2.74</strong></div>
+        <div>Battery <strong>0.34</strong></div>
+      </div>
+      <canvas id="currentPowerGraph" class="mini-chart"></canvas>
+    </article>
 
-  <!-- Card 3: Consumption -->
-  <div class="card" id="consumption-card">
-    <div class="card-header">
-      <span>Consumption</span>
-      <button class="popupbutton" data-overlay="popupOverlay3">Show Details</button>
-    </div>
-    <div class="card-content">
-      <div class="value">56.4</div>
-    </div>
-    <div class="trend-graph">[Graph Placeholder]</div>
-  </div>
+    <!-- Production -->
+    <article class="data-card popup-trigger" data-overlay="popupOverlay2">
+      <header class="card-top"><h3>Production</h3></header>
+      <div class="metric">28.5 kW</div>
+      <div class="progress-bar"><div class="progress" style="width:38%"></div></div>
+      <div class="progress-label">Low</div>
+    </article>
 
-  <!-- Card 4: Site Power -->
-  <div class="card" id="sitepower-card">
-    <div class="card-header">
-      <span>Site Power</span>
-      <button class="popupbutton" data-overlay="popupOverlay4">Show Details</button>
-    </div>
-    <div class="card-content">
-      <div class="value">3.93</div>
-      <div>Product</div>
-      <div>from Home</div>
-    </div>
-    <div class="trend-graph">[Graph Placeholder]</div>
-  </div>
-</div>
+    <!-- Consumption -->
+    <article class="data-card popup-trigger" data-overlay="popupOverlay3">
+      <header class="card-top"><h3>Consumption</h3></header>
+      <div class="metric">56.4 kWh</div>
+      <div class="progress-bar"><div class="progress" style="width:65%"></div></div>
+      <div class="progress-label">Normal</div>
+    </article>
 
-<!-- Overlays for each card -->
-<!-- Overlay for Current Power -->
-<div id="popupOverlay1" class="card-overlay">
+    <!-- Add other 5 data cards here -->
+  </section>
+</main>
+
+<!-- Overlays -->
+<div class="card-overlay" id="popupOverlay1">
   <div class="popup-card">
-    <button class="closePopup" title="Close">&times;</button>
-    <!-- Popup content for Current Power -->
-    <div class="card">
-      <div class="card-header">
-        <span>Current Power Details</span>
-      </div>
-      <div class="card-content">
-        <div class="value">5.48</div>
-        <div class="labels">
-          <div>Solar</div>
-          <div>Grid</div>
-          <div>Battery</div>
-        </div>
-      </div>
-      <div class="trend-graph">[Graph Placeholder]</div>
-    </div>
+    <button class="closePopup">×</button>
+    <h2>Current Power Details</h2>
+    <p>Detailed breakdown and graphs here.</p>
   </div>
 </div>
 
-<!-- Overlay for Production -->
-<div id="popupOverlay2" class="card-overlay">
+<div class="card-overlay" id="popupOverlay2">
   <div class="popup-card">
-    <button class="closePopup" title="Close">&times;</button>
-    <!-- Popup content for Production -->
-    <div class="card">
-      <div class="card-header">
-        <span>Production Details</span>
-      </div>
-      <div class="card-content">
-        <div class="value">28.5</div>
-        <!-- Add extra details if needed -->
-      </div>
-      <div class="trend-graph">[Graph Placeholder]</div>
-    </div>
+    <button class="closePopup">×</button>
+    <h2>Production Details</h2>
+    <p>Graph and details here.</p>
   </div>
 </div>
 
-<!-- Overlay for Consumption -->
-<div id="popupOverlay3" class="card-overlay">
+<div class="card-overlay" id="popupOverlay3">
   <div class="popup-card">
-    <button class="closePopup" title="Close">&times;</button>
-    <!-- Popup content for Consumption -->
-    <div class="card">
-      <div class="card-header">
-        <span>Consumption Details</span>
-      </div>
-      <div class="card-content">
-        <div class="value">56.4</div>
-        <!-- Extra details can be added here -->
-      </div>
-      <div class="trend-graph">[Graph Placeholder]</div>
-    </div>
+    <button class="closePopup">×</button>
+    <h2>Consumption Details</h2>
+    <p>Graph and details here.</p>
   </div>
 </div>
 
-<!-- Overlay for Site Power -->
-<div id="popupOverlay4" class="card-overlay">
-  <div class="popup-card">
-    <button class="closePopup" title="Close">&times;</button>
-    <!-- Popup content for Site Power -->
-    <div class="card">
-      <div class="card-header">
-        <span>Site Power Details</span>
-      </div>
-      <div class="card-content">
-        <div class="value">3.93</div>
-        <div>Product</div>
-        <div>from Home</div>
-      </div>
-      <div class="trend-graph">[Graph Placeholder]</div>
-    </div>
-  </div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
 </body>
+</html>
