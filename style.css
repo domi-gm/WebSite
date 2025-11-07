@@ -17,7 +17,7 @@
 
   *{box-sizing:border-box}
   html,body{height:100%; margin:0; font-family:'Inter',Roboto,sans-serif; scroll-behavior:smooth; background:var(--color-background-primary); color:#fff;}
-  main{padding-top: calc(var(--header-height)+16px);}
+  main{padding-top: 0; /* hero-wrapper provides top spacing */}
 
   /* Header */
   .site-header{position:fixed; top:0; left:0; right:0; height: var(--header-height); display:flex; align-items:center; padding:0 28px; background: rgba(10,10,10,0.95); box-shadow:0 2px 14px rgba(0,0,0,0.7); z-index:200;}
@@ -29,23 +29,164 @@
   .main-nav button{background:transparent; border:none; color:#fff; padding:8px 14px; border-radius:8px; font-weight:600; cursor:pointer; transition: background .25s ease, transform .2s ease;}
   .main-nav button.active, .main-nav button:hover{background: rgba(255,255,255,0.15); transform: translateY(-2px);}
 
-  /* Visual Area */
-  .visual-area{padding:28px; max-width:1400px; margin:auto;}
-  .visual-header{display:flex; gap:16px; margin-bottom:12px;}
-  .visual-header h1{margin:0; font-size:22px; font-weight:700;}
-  .site-id{color:#ccc; font-size:13px;}
-  .visual-stage{position:relative; background:#111; border-radius:var(--card-radius); padding:28px; min-height:320px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 22px rgba(0,0,0,0.6); transition:box-shadow .3s;}
+  /* Hero Section */
+.hero-wrapper {
+  height: 140vh; /* further reduce scroll space so the grid appears sooner */
+  position: relative;
+}
+
+.hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-background-primary);
+}
+
+.hero-img {
+  width:100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
+  will-change: transform;
+  /* start slightly zoomed-out so the hero feels less "blown up" on load */
+  transform: scale(0.97);
+}
+
+.hero-content {
+  position: absolute;
+  top: 110px;
+  left: 48px;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+.username-greeting {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Baskervville', Arial;
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-lines {
+  position: absolute;
+  top: 50%;
+  left: 48px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* When the hero collapses to header height */
+.hero.collapsed {
+  height: var(--header-height);
+}
+
+.hero.collapsed .hero-img {
+  transform-origin: center top;
+}
   .panel-3d{width:70%; height:220px; background:linear-gradient(135deg,#181818,#0d0d0d); border-radius:10px; display:flex; justify-content:center; align-items:center; color:#888; font-size:14px;}
   .visual-controls{position:absolute; right:12px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px;}
   .visual-controls .ctrl{background: rgba(255,255,255,0.15); border:none; width:44px; height:44px; border-radius:8px; color:#fff; font-size:20px; cursor:pointer;}
 
   /* Data Grid */
-  .data-grid-container{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--gap); padding:2rem; max-width:1400px; margin:auto;}
-  @media(max-width:1024px){.data-grid-container{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:480px){.data-grid-container{grid-template-columns:1fr; padding:1rem;}}
+  .data-grid-container {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: var(--gap);
+    padding: 2rem;
+    max-width: 1400px;
+    margin: auto;
+    /* pull grid up under the hero for a much tighter layout */
+    margin-top: -300px;
+    opacity: 0;
+    transform: translateY(36px);
+    /* longer, smoother entrance for the whole grid */
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+.data-grid-container.visible {
+  pointer-events: all;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Play-mode: when added, the container and cards run a CSS animation (played once)
+   JS will toggle the `play` class and set per-card animation-delay where needed. */
+.data-grid-container.play {
+  /* keep final state when animation finishes */
+  animation: gridSlideIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes gridSlideIn {
+  from { opacity: 0; transform: translateY(48px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card-level entrance animation (used when container plays) */
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.data-grid-container.play .data-card {
+  /* animation properties are set via JS (animation-delay) for precise staggering, but
+     provide reasonable defaults here for non-JS fallback */
+  animation-name: cardSlideIn;
+  animation-duration: 0.9s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media(max-width:1024px){.data-grid-container{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.data-grid-container{grid-template-columns:1fr; padding:1rem;}}
 
   /* Data Cards */
-  .data-card{background:#fff; color:#111; border-radius:var(--card-radius); padding:16px; box-shadow:0 8px 20px rgba(0,0,0,0.35); display:flex; flex-direction:column; transition:transform .28s ease, box-shadow .28s ease, opacity .28s ease; cursor:pointer;}
+  .data-card{
+    background: #fff;
+    color: #111;
+    border-radius: var(--card-radius);
+    padding: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow .45s ease, transform .35s ease, opacity .28s ease;
+    cursor: pointer;
+    /* baseline for non-JS fallback (JS may overwrite these while scrubbing) */
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  .data-card.visible{opacity:1; transform: translateY(0);}
   .data-card:hover{transform:translateY(-6px); box-shadow:0 20px 45px rgba(0,0,0,0.5);}
   .data-card.selected { transform: scale(0.95) translateY(5px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); opacity: 0.8;}
   .card-top{display:flex; justify-content:space-between; align-items:center;}
@@ -209,6 +350,22 @@
   }
   #usernameOverlay.active {
     display: flex;
+  }
+
+  .annotation-line {
+    position: absolute;
+    color: #fff;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .annotation-line.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
 /* New Card Styles */
