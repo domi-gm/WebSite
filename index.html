@@ -60,7 +60,7 @@
   
 
     <!-- Card 1: Power Generated Today -->
-    <article class="data-card popup-trigger" data-overlay="powerTodayOverlay">
+    <article class="data-card popup-trigger" data-overlay="powerTodayOverlay" 
       <header class="card-top">
         <h3>Power generated today</h3>
       </header>
@@ -74,7 +74,7 @@
     </article>
 
     <!-- Card 2: Weekly Average -->
-    <article class="data-card popup-trigger" data-overlay="weeklyAverageOverlay">
+    <article class="data-card popup-trigger" data-overlay="weeklyAverageOverlay" id="weekly-average-card">
       <header class="card-top">
         <h3>Weekly average</h3>
       </header>
@@ -121,15 +121,15 @@
     </article>
 
     <!-- Card 4: Energy Per Step -->
-    <article class="data-card popup-trigger" data-overlay="energyStepOverlay">
+    <article class="data-card popup-trigger" data-overlay="energyStepOverlay" id="energy-per-step-card">
       <div class="card-content-icon">
-        <div class="battery-icon"></div>
+        <div class="battery-icon"><div class="battery-level"></div></div>
         <p>Amount of energy produced per step: <strong>30 Wh</strong></p>
       </div>
     </article>
 
     <!-- Card 5: Stored vs Used Energy -->
-    <article class="data-card popup-trigger" data-overlay="storedUsedOverlay">
+    <article class="data-card popup-trigger" data-overlay="storedUsedOverlay" id="stored-used-card">
       <header class="card-top">
         <div class="lightning-icon"></div>
       </header>

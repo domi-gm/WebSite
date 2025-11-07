@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
         }
