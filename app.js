@@ -8,15 +8,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const popupCard = overlay.querySelector('.popup-card');
     const closeBtn = overlay.querySelector('.closePopup');
 
+    let lastCardRect = null;
+
     const openOverlay = () => {
+      lastCardRect = card.getBoundingClientRect();
+      
       overlay.classList.add('active');
-      popupCard.classList.add('expanded');
       document.body.style.overflow = 'hidden';
+
+      popupCard.style.top = `${lastCardRect.top}px`;
+      popupCard.style.left = `${lastCardRect.left}px`;
+      popupCard.style.width = `${lastCardRect.width}px`;
+      popupCard.style.height = `${lastCardRect.height}px`;
+      
+      card.classList.add('selected');
+
+      requestAnimationFrame(() => {
+        popupCard.classList.add('expanded');
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        const targetWidth = Math.min(720, vw * 0.8);
+        const targetHeight = vh * 0.8;
+
+
+        popupCard.style.top = `${(vh - targetHeight) / 2}px`;
+        popupCard.style.left = `${(vw - targetWidth) / 2}px`;
+        popupCard.style.width = `${targetWidth}px`;
+        popupCard.style.height = `${targetHeight}px`;
+      });
     };
+
     const closeOverlay = () => {
-      overlay.classList.remove('active');
+      if (!lastCardRect) return;
+
       popupCard.classList.remove('expanded');
-      document.body.style.overflow = '';
+      
+      popupCard.style.top = `${lastCardRect.top}px`;
+      popupCard.style.left = `${lastCardRect.left}px`;
+      popupCard.style.width = `${lastCardRect.width}px`;
+      popupCard.style.height = `${lastCardRect.height}px`;
+
+      const onTransitionEnd = () => {
+        overlay.classList.remove('active');
+        card.classList.remove('selected');
+        document.body.style.overflow = '';
+        popupCard.removeEventListener('transitionend', onTransitionEnd);
+      };
+      popupCard.addEventListener('transitionend', onTransitionEnd);
     };
 
     card.addEventListener('click', openOverlay);
