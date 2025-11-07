@@ -1,136 +1,236 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="style.css" />
-<title>Meevis Solar Panel</title>
+  <meta charset="UTF-8" />
+  <title>Piezoelectric Floor Cards</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- App JS -->
+  <script src="app.js" defer></script>
 </head>
 <body>
+  <div class="overlay"></div>
 
-<header class="site-header">
-  <!-- Logo + Username -->
-  <div class="logo-user">
-    <img src="logo.png" alt="Meevis Solar" class="logo-img">
-     <span class="username-text" id="username">No username</span>
-  </div>
-  </div>
-
-<div class="header-right">
-  <button id="connectBtn">Connect Pad</button>
-</div>
-
-  <!-- Centered nav -->
-  <nav class="main-nav" role="navigation" aria-label="Main">
-    <button class="active">Overview</button>
-    <button>Analytics</button>
-    <button>Monitoring</button>
-  </nav>
-</header>
-
-<main>
-  <!-- Main Visual Area -->
-  <section class="visual-area">
-
-    <div class="visual-stage">
-      <div class="panel-3d">
-          <img src="sidewalks.png" alt="Solar Panel Array" class="panel-img">
+  <main class="dashboard">
+    <!-- Card 1: Power generated today -->
+    <article class="card" data-card-type="todayPower">
+      <button class="card-close" aria-label="Close">&times;</button>
+      <header class="card-header">
+        <p class="card-label">Power generated today</p>
+      </header>
+      <div class="card-body card-body--split">
+        <div class="card-main-value">
+          <span class="value value--handwritten">4.000 kWh</span>
+        </div>
+        <div class="card-trends">
+          <div class="trend trend--up">
+            <span class="trend-arrow">▲</span>
+            <span class="trend-value">30%</span>
+          </div>
+          <div class="trend trend--down">
+            <span class="trend-arrow">▼</span>
+            <span class="trend-value">20%</span>
+          </div>
+        </div>
       </div>
-      <!-- vertical controls -->
-      <div class="visual-controls">
-        <button class="ctrl">+</button>
-        <button class="ctrl">−</button>
+      <section class="card-details">
+        <div class="card-chart-wrapper">
+          <canvas id="todayPowerChart"></canvas>
+        </div>
+        <p class="card-text">
+          Today’s production is 30% higher than yesterday. Morning foot traffic and midday activity have boosted your piezoelectric floor output.
+        </p>
+      </section>
+    </article>
+
+    <!-- Card 2: Weekly average -->
+    <article class="card" data-card-type="weeklyAverage">
+      <button class="card-close" aria-label="Close">&times;</button>
+      <header class="card-header">
+        <h2 class="card-title">Weekly average</h2>
+      </header>
+      <div class="card-body">
+        <div class="card-chart-preview">
+          <canvas id="weeklyAveragePreview"></canvas>
+        </div>
       </div>
-    </div>
-  </section>
+      <section class="card-details">
+        <div class="card-chart-wrapper">
+          <canvas id="weeklyAverageDetail"></canvas>
+        </div>
+        <div class="weekly-stats">
+          <p><strong>Best day:</strong> <span id="weeklyBestDay">Thursday</span></p>
+          <p><strong>Average per day:</strong> <span id="weeklyAverageValue">620 kWh</span></p>
+          <p><strong>Change vs last week:</strong> <span id="weeklyChange">+15%</span></p>
+        </div>
+      </section>
+    </article>
 
-
-
-  <!-- Data Grid -->
-  <section class="data-grid-container">
-        <!-- Placeholder Arduino Data Widget -->
-<article class="data-card" id="arduinoBlock">
-  <header class="card-top">
-    <h3>Arduino Voltage</h3>
-  </header>
-  <div class="metric" id="arduinoValue">-- V</div>
-  <div class="mini-chart">[Live]</div>
-</article>
-    <!-- Current Power -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay1">
-      <header class="card-top"><h3>Current Power</h3></header>
-      <div class="metric">5.48 kW</div>
-      <div class="breakdown">
-        <div>Solar <strong>2.74</strong></div>
-        <div>Grid <strong>2.74</strong></div>
-        <div>Battery <strong>0.34</strong></div>
+    <!-- Card 3: Achievement system -->
+    <article class="card" data-card-type="achievements">
+      <button class="card-close" aria-label="Close">&times;</button>
+      <header class="card-header">
+        <h2 class="card-title">Achievement system</h2>
+      </header>
+      <div class="card-body">
+        <div class="achievement-row">
+          <div class="progress-label">
+            <span>Amount of steps</span>
+            <span>8.000 / 10.000</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-progress-key="steps"></div>
+          </div>
+        </div>
+        <div class="achievement-row">
+          <div class="progress-label">
+            <span>Amount of energy produced</span>
+            <span>7.500 kWh / 10.000 kWh</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-progress-key="energy"></div>
+          </div>
+        </div>
+        <div class="achievement-row">
+          <div class="progress-label">
+            <span>Amount of money saved</span>
+            <span>7.000 $ / 10.000 $</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-progress-key="money"></div>
+          </div>
+        </div>
+        <div class="achievement-row">
+          <div class="progress-label">
+            <span>Annual CO₂ reduction</span>
+            <span>3.000 kg / 10.000 kg</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" data-progress-key="co2"></div>
+          </div>
+        </div>
       </div>
-      <canvas id="currentPowerGraph" class="mini-chart"></canvas>
+      <section class="card-details">
+        <div class="card-body card-body--achievements-expanded">
+          <div class="achievement-row achievement-row--large">
+            <div class="progress-label">
+              <span>Amount of steps</span>
+              <span>8.000 / 10.000</span>
+            </div>
+            <div class="progress-bar progress-bar--large">
+              <div class="progress-fill" data-progress-key="steps"></div>
+            </div>
+          </div>
+          <div class="achievement-row achievement-row--large">
+            <div class="progress-label">
+              <span>Amount of energy produced</span>
+              <span>7.500 kWh / 10.000 kWh</span>
+            </div>
+            <div class="progress-bar progress-bar--large">
+              <div class="progress-fill" data-progress-key="energy"></div>
+            </div>
+          </div>
+          <div class="achievement-row achievement-row--large">
+            <div class="progress-label">
+              <span>Amount of money saved</span>
+              <span>7.000 $ / 10.000 $</span>
+            </div>
+            <div class="progress-bar progress-bar--large">
+              <div class="progress-fill" data-progress-key="money"></div>
+            </div>
+          </div>
+          <div class="achievement-row achievement-row--large">
+            <div class="progress-label">
+              <span>Annual CO₂ reduction</span>
+              <span>3.000 kg / 10.000 kg</span>
+            </div>
+            <div class="progress-bar progress-bar--large">
+              <div class="progress-fill" data-progress-key="co2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-chart-wrapper">
+          <canvas id="achievementChart"></canvas>
+        </div>
+        <p class="card-text">
+          You have reached 80% of your step goal and are on track to complete all four achievements soon. Keep moving to push every bar closer to 100%.
+        </p>
+      </section>
     </article>
 
-    <!-- Production -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay2">
-      <header class="card-top"><h3>Production</h3></header>
-      <div class="metric">28.5 kW</div>
-      <div class="progress-bar"><div class="progress" style="width:38%"></div></div>
-      <div class="progress-label">Low</div>
+    <!-- Card 4: Energy per step -->
+    <article class="card" data-card-type="energyPerStep">
+      <button class="card-close" aria-label="Close">&times;</button>
+      <header class="card-header card-header--inline">
+        <div class="battery-icon">
+          <span class="battery-level"></span>
+        </div>
+        <div class="energy-step-labels">
+          <p class="card-label">Amount of energy produced per step</p>
+          <p class="card-main-text">
+            <span class="value value--handwritten">30 Wh</span>
+          </p>
+        </div>
+      </header>
+      <section class="card-details">
+        <div class="card-chart-wrapper">
+          <canvas id="energyPerStepChart"></canvas>
+        </div>
+        <p class="card-text">
+          On average, one step currently produces around 30 Wh. Consistent daily usage of the piezoelectric floor steadily boosts this value over time.
+        </p>
+      </section>
     </article>
 
-    <!-- Consumption -->
-    <article class="data-card popup-trigger" data-overlay="popupOverlay3">
-      <header class="card-top"><h3>Consumption</h3></header>
-      <div class="metric">56.4 kWh</div>
-      <div class="progress-bar"><div class="progress" style="width:65%"></div></div>
-      <div class="progress-label">Normal</div>
+    <!-- Card 5: Stored vs used energy -->
+    <article class="card" data-card-type="storedUsed">
+      <button class="card-close" aria-label="Close">&times;</button>
+      <header class="card-header">
+        <div class="lightning-icon"></div>
+      </header>
+      <div class="card-body card-body--split">
+        <div class="energy-block">
+          <p class="card-label">Stored energy</p>
+          <p class="value value--handwritten">350 kWh</p>
+          <p class="trend trend--up small-trend">
+            <span class="trend-arrow">▲</span>
+            <span class="trend-value">+30%</span>
+          </p>
+        </div>
+        <div class="energy-block">
+          <p class="card-label">Used energy</p>
+          <p class="value value--handwritten">250 kWh</p>
+          <p class="trend trend--down small-trend">
+            <span class="trend-arrow">▲</span>
+            <span class="trend-value">+25%</span>
+          </p>
+        </div>
+      </div>
+      <section class="card-details">
+        <div class="card-chart-wrapper card-chart-wrapper--stacked">
+          <div class="chart-half">
+            <canvas id="storedUsedDoughnut"></canvas>
+          </div>
+          <div class="chart-half">
+            <canvas id="storedUsedLine"></canvas>
+          </div>
+        </div>
+        <p class="card-text">
+          Your system currently stores more energy than it consumes. Monitoring the stored vs used balance helps you size batteries and optimize when to feed energy back into the grid.
+        </p>
+      </section>
     </article>
-        <article class="data-card popup-trigger" data-overlay="popupOverlay3">
-      <header class="card-top"><h3>Consumption</h3></header>
-      <div class="metric">56.4 kWh</div>
-      <div class="progress-bar"><div class="progress" style="width:65%"></div></div>
-      <div class="progress-label">Normal</div>
-    </article>
-
-    <!-- Add other 5 data cards here -->
-  </section>
-</main>
-
-<!-- Overlays -->
-<div class="card-overlay" id="popupOverlay1">
-  <div class="popup-card">
-    <button class="closePopup">×</button>
-    <h2>Current Power Details</h2>
-    <p>Detailed breakdown and graphs here.</p>
-  </div>
-</div>
-
-<div class="card-overlay" id="popupOverlay2">
-  <div class="popup-card">
-    <button class="closePopup">×</button>
-    <h2>Production Details</h2>
-    <p>Graph and details here.</p>
-  </div>
-</div>
-
-<div class="card-overlay" id="popupOverlay3">
-  <div class="popup-card">
-    <button class="closePopup">×</button>
-    <h2>Consumption Details</h2>
-    <p>Graph and details here.</p>
-  </div>
-</div>
-
-<!-- Username Overlay -->
-<div class="card-overlay" id="usernameOverlay">
-  <div class="popup-card">
-    <button class="closePopup">&times;</button>
-    <h3>Edit Username</h3>
-    <input type="text" id="usernameInput" placeholder="Enter new username" style="width:100%; padding:8px; margin-top:12px; border-radius:6px; border:1px solid #ccc; font-size:14px;">
-    <button id="saveUsername" style="margin-top:12px; padding:8px 12px; border:none; background:var(--color-accent-solar); color:#fff; border-radius:6px; cursor:pointer;">Save</button>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
-<script src="app.js"></script>
-<script src="arduino.js"></script>
+  </main>
 </body>
 </html>
