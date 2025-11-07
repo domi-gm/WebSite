@@ -12,8 +12,13 @@
   <!-- Logo + Username -->
   <div class="logo-user">
     <img src="logo.png" alt="Meevis Solar" class="logo-img">
-    <span class="username">Meevis Nederweerzt</span>
+     <span class="username-text" id="username">No username</span>
   </div>
+  </div>
+
+<div class="header-right">
+  <button id="connectBtn">Connect Pad</button>
+</div>
 
   <!-- Centered nav -->
   <nav class="main-nav" role="navigation" aria-label="Main">
@@ -28,7 +33,9 @@
   <section class="visual-area">
 
     <div class="visual-stage">
-      <div class="panel-3d">[3D Solar Panel Placeholder]</div>
+      <div class="panel-3d">
+          <img src="sidewalks.png" alt="Solar Panel Array" class="panel-img">
+      </div>
       <!-- vertical controls -->
       <div class="visual-controls">
         <button class="ctrl">+</button>
@@ -37,9 +44,6 @@
     </div>
   </section>
 
-    <div style="padding: 1rem; text-align:center;">
-    <button id="connectBtn">Connect Arduino</button>
-  </div>
 
 
   <!-- Data Grid -->
@@ -112,6 +116,16 @@
     <button class="closePopup">×</button>
     <h2>Consumption Details</h2>
     <p>Graph and details here.</p>
+  </div>
+</div>
+
+<!-- Username Overlay -->
+<div class="card-overlay" id="usernameOverlay">
+  <div class="popup-card">
+    <button class="closePopup">&times;</button>
+    <h3>Edit Username</h3>
+    <input type="text" id="usernameInput" placeholder="Enter new username" style="width:100%; padding:8px; margin-top:12px; border-radius:6px; border:1px solid #ccc; font-size:14px;">
+    <button id="saveUsername" style="margin-top:12px; padding:8px 12px; border:none; background:var(--color-accent-solar); color:#fff; border-radius:6px; cursor:pointer;">Save</button>
   </div>
 </div>
 

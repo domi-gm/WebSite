@@ -85,3 +85,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const usernameText = document.getElementById('username');
+  const overlay = document.getElementById('usernameOverlay');
+  const closeBtn = overlay.querySelector('.closePopup');
+  const saveBtn = document.getElementById('saveUsername');
+  const input = document.getElementById('usernameInput');
+
+  usernameText.addEventListener('click', () => {
+    input.value = usernameText.textContent;
+    overlay.classList.add('active');
+    overlay.querySelector('.popup-card').classList.add('expanded');
+    document.body.style.overflow = 'hidden';
+  });
+
+  const closeOverlay = () => {
+    overlay.classList.remove('active');
+    overlay.querySelector('.popup-card').classList.remove('expanded');
+    document.body.style.overflow = '';
+  };
+
+  closeBtn.addEventListener('click', closeOverlay);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeOverlay();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    usernameText.textContent = input.value;
+    closeOverlay();
+  });
+});
