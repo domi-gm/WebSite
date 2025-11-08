@@ -279,77 +279,51 @@
 
   /* Username overlay adjustments */
   #usernameOverlay .popup-card {
-    background: #111; /* dark background */
-    color: #fff;      /* white text */
-    width: 320px;     /* smaller centered box */
-    padding: 24px;
-    border-radius: 12px;
+    /* All positioning is now handled by JS, so we remove fixed width/height/transform */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
-    transform: scale(0.9);
-    opacity: 0;
-    transition: all 0.26s ease;
+    padding: 24px;
   }
 
-  /* Expand when active */
-  #usernameOverlay.active .popup-card,
-  #usernameOverlay .popup-card.expanded {
-    transform: scale(1);
-    opacity: 1;
+  #usernameOverlay.active {
+    display: block; /* No longer flex, just block */
   }
 
   /* Input styling */
   #usernameOverlay input {
     width: 100%;
-    padding: 8px 10px;
+    padding: 10px;
     margin-top: 12px;
-    border-radius: 6px;
-    border: 1px solid #555;
-    background: #222;
-    color: #fff;
-    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+    color: #111;
+    font-size: 16px;
     text-align: center;
   }
 
   /* Save button styling */
   #usernameOverlay button#saveUsername {
-    margin-top: 12px;
-    padding: 8px 14px;
+    margin-top: 16px;
+    padding: 10px 18px;
     border: none;
     background: var(--color-accent-grid);
-    color: #111;
-    border-radius: 6px;
+    color: #fff;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    transition: background 0.2s ease;
   }
-  #usernameOverlay button#saveUsername {
-  background: var(--color-accent-grid) !important; /* force it blue */
-  color: #111;
-}
-
+  #usernameOverlay button#saveUsername:hover {
+    background: #007bff;
+  }
 
   /* Close button */
   #usernameOverlay .closePopup {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    color: #fff;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  /* Center the overlay flex container */
-  #usernameOverlay {
-    display: none; /* hidden by default */
-    justify-content: center;
-    align-items: center;
-  }
-  #usernameOverlay.active {
-    display: flex;
+    color: #111; /* Match other popups */
   }
 
   .annotation-line {
@@ -530,4 +504,89 @@
   #stored-used-card {
     grid-column-start: 1;
   }
+}
+
+/* Monitoring layout - two column with heatmap and eco benefits */
+.monitoring-layout{
+  display: grid;
+  grid-template-columns: 60% 40%;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 2.5rem auto 5rem;
+  padding: 0 1rem;
+}
+
+.heatmap-panel{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 1.25rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--card-radius);
+}
+
+.panel-shell{ /* keeps midi-housing centered and constrained */
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.eco-benefits{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+.eco-title{
+  margin:0 0 6px 0;
+  color:#fff;
+  font-size:20px;
+  font-weight:700;
+}
+
+.eco-cards-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:1rem;
+}
+
+.eco-card{
+  background:#fff;
+  color:var(--color-text-primary);
+  border-radius:var(--card-radius);
+  padding:12px 14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.18);
+  display:flex;
+  gap:12px;
+  align-items:center;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.eco-card:hover{ transform: translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,0.22); }
+
+.eco-icon{
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
+}
+
+.eco-body{ flex:1; display:flex; flex-direction:column; }
+.eco-number{ font-size:20px; font-weight:800; color:var(--color-accent-grid); }
+.eco-label{ font-size:13px; color:var(--color-text-primary); margin-top:4px; }
+.eco-sub{ font-size:12px; color:var(--color-text-secondary); margin-top:6px; }
+
+/* Responsive: stack columns on smaller screens */
+@media(max-width:1000px){
+  .monitoring-layout{ grid-template-columns: 1fr; }
+  .eco-cards-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media(max-width:520px){
+  .eco-cards-grid{ grid-template-columns: 1fr; }
+  .eco-icon{ width:42px; height:42px; font-size:20px }
+  .eco-number{ font-size:18px }
 }

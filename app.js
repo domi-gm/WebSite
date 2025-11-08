@@ -94,30 +94,73 @@
     const usernameText = document.getElementById('username');
     const usernameOverlay = document.getElementById('usernameOverlay');
     if (usernameText && usernameOverlay) {
+      const usernamePopupCard = usernameOverlay.querySelector('.popup-card');
       const usernameCloseBtn = usernameOverlay.querySelector('.closePopup');
       const saveUsernameBtn = document.getElementById('saveUsername');
       const usernameInput = document.getElementById('usernameInput');
 
-      usernameText.addEventListener('click', () => {
-        usernameInput.value = usernameText.textContent;
-        usernameOverlay.classList.add('active');
-        usernameOverlay.querySelector('.popup-card').classList.add('expanded');
-        document.body.style.overflow = 'hidden';
-      });
+      let lastUsernameRect = null;
 
-      const closeUsernameOverlay = () => {
-        usernameOverlay.classList.remove('active');
-        usernameOverlay.querySelector('.popup-card').classList.remove('expanded');
-        document.body.style.overflow = '';
+      const openUsernameOverlay = () => {
+        lastUsernameRect = usernameText.getBoundingClientRect();
+        usernameInput.value = usernameText.textContent === 'No username' ? '' : usernameText.textContent;
+
+        usernameOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        usernamePopupCard.style.top = `${lastUsernameRect.top}px`;
+        usernamePopupCard.style.left = `${lastUsernameRect.left}px`;
+        usernamePopupCard.style.width = `${lastUsernameRect.width}px`;
+        usernamePopupCard.style.height = `${lastUsernameRect.height}px`;
+
+        usernameText.classList.add('selected');
+
+        requestAnimationFrame(() => {
+          usernamePopupCard.classList.add('expanded');
+          const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+          
+          const targetWidth = 320;
+          const targetHeight = 180;
+
+          usernamePopupCard.style.top = `${(vh - targetHeight) / 2}px`;
+          usernamePopupCard.style.left = `${(vw - targetWidth) / 2}px`;
+          usernamePopupCard.style.width = `${targetWidth}px`;
+          usernamePopupCard.style.height = `${targetHeight}px`;
+        });
       };
 
+      const closeUsernameOverlay = () => {
+        if (!lastUsernameRect) return;
+
+        usernamePopupCard.classList.remove('expanded');
+
+        usernamePopupCard.style.top = `${lastUsernameRect.top}px`;
+        usernamePopupCard.style.left = `${lastUsernameRect.left}px`;
+        usernamePopupCard.style.width = `${lastUsernameRect.width}px`;
+        usernamePopupCard.style.height = `${lastUsernameRect.height}px`;
+
+        const onTransitionEnd = () => {
+          usernameOverlay.classList.remove('active');
+          usernameText.classList.remove('selected');
+          document.body.style.overflow = '';
+          usernamePopupCard.removeEventListener('transitionend', onTransitionEnd);
+        };
+        usernamePopupCard.addEventListener('transitionend', onTransitionEnd);
+      };
+
+      usernameText.addEventListener('click', openUsernameOverlay);
       if (usernameCloseBtn) usernameCloseBtn.addEventListener('click', closeUsernameOverlay);
       usernameOverlay.addEventListener('click', (e) => {
         if (e.target === usernameOverlay) closeUsernameOverlay();
       });
 
       if (saveUsernameBtn) saveUsernameBtn.addEventListener('click', () => {
-        usernameText.textContent = usernameInput.value;
+        if (usernameInput.value.trim()) {
+          usernameText.textContent = usernameInput.value;
+        } else {
+          usernameText.textContent = 'No username';
+        }
         closeUsernameOverlay();
       });
     }
@@ -229,4 +272,167 @@
         options: { responsive: true, plugins: { legend: { display: false } } }
       });
     }
+
+    // --- Heatmap (dummy data) for the 8x8 pad ---
+    (function renderHeatmap(){
+      const tiles = Array.from(document.querySelectorAll('.midi-grid .midi-button'));
+      if (!tiles || tiles.length === 0) return;
+
+      // get accent colors from CSS variables
+      const css = getComputedStyle(document.documentElement);
+      const accentGrid = css.getPropertyValue('--color-accent-grid').trim() || '#00aaff';
+      const accentSolar = css.getPropertyValue('--color-accent-solar').trim() || '#ff6b00';
+
+      // generate dummy values 0..1
+      const values = tiles.map((_, i) => {
+        // seeded-ish distribution: some low, some mid, some high
+        const r = Math.abs(Math.sin(i * 12.9898 + 78.233)) % 1; // deterministic pseudo-random per index
+        return Math.round((r) * 100) / 100;
+      });
+
+      function lerp(a,b,t){ return a + (b-a)*t }
+
+      // convert hex to rgba helper
+      function hexToRgb(hex){
+        const safe = hex.replace('#','');
+        const bigint = parseInt(safe,16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return [r,g,b];
+      }
+
+      const accRgb = hexToRgb(accentGrid || '#00aaff');
+      const solarRgb = hexToRgb(accentSolar || '#ff6b00');
+
+      function valueToColor(v){
+        // v in [0,1]
+        if (v <= 0.25) {
+          // almost transparent light grey
+          return 'rgba(255,255,255,' + (0.04 + v*0.12) + ')';
+        }
+        if (v <= 0.6) {
+          // interpolate toward accentGrid (blue/green)
+          const t = (v - 0.25) / (0.6 - 0.25);
+          const r = Math.round(lerp(230, accRgb[0], t));
+          const g = Math.round(lerp(230, accRgb[1], t));
+          const b = Math.round(lerp(230, accRgb[2], t));
+          return `rgba(${r},${g},${b},${0.95})`;
+        }
+        // high usage: move toward solar accent for warmth
+        const t = (v - 0.6) / 0.4;
+        const r = Math.round(lerp(accRgb[0], solarRgb[0], t));
+        const g = Math.round(lerp(accRgb[1], solarRgb[1], t));
+        const b = Math.round(lerp(accRgb[2], solarRgb[2], t));
+        return `rgba(${r},${g},${b},${0.98})`;
+      }
+
+      tiles.forEach((tile, idx) => {
+        const v = values[idx] ?? 0;
+        const color = valueToColor(v);
+        tile.style.background = color;
+        tile.dataset.usage = Math.round(v * 100);
+        tile.title = `Tile ${idx + 1} — ${tile.dataset.usage}% usage`;
+
+        // hover feedback: scale + console log
+        tile.addEventListener('mouseenter', () => {
+          tile.style.transform = 'scale(1.06)';
+          tile.style.boxShadow = `0 8px 26px rgba(0,0,0,0.35), 0 0 18px rgba(255,255,255,0.06) inset`;
+          console.log(`Tile ${idx + 1} – ${tile.dataset.usage}% usage`);
+        });
+        tile.addEventListener('mouseleave', () => {
+          tile.style.transform = '';
+          tile.style.boxShadow = '';
+        });
+      });
+    })();
+
+    // --- Monitoring page heatmap (Time-based animation) ---
+    (function renderHeatmapPanel(){
+      const tiles = Array.from(document.querySelectorAll('.heatmap-grid .heatmap-tile'));
+      if (!tiles || tiles.length === 0) return;
+
+      const timeSlider = document.getElementById('heatmapTimeSlider');
+      const timeLabel = document.getElementById('heatmapCurrentTime');
+      const playPauseBtn = document.getElementById('heatmapPlayPause');
+
+      if (!timeSlider || !timeLabel || !playPauseBtn) {
+        console.error('Heatmap time control elements not found!');
+        return;
+      }
+
+      // 1. Data Model: 24 hours, 64 tiles per hour (0-100)
+      const heatmapDayData = Array.from({ length: 24 }, () =>
+        Array.from({ length: 64 }, () => Math.floor(Math.random() * 101))
+      );
+
+      let currentHour = 8;
+      let isPlaying = false;
+      let animationInterval = null;
+
+      // 2. Color Interpolation Function (Monochromatic Blue)
+      function getHeatmapColor(value) {
+        // value is 0-100
+        // Use HSL to create a smooth gradient within a single blue hue (215deg)
+        // Lightness will go from 90% (very light blue) down to 40% (dark blue)
+        const lightness = 90 - (value * 0.5); // 90% -> 40%
+        return `hsl(215, 100%, ${lightness}%)`;
+      }
+
+      // 3. Function to Update UI based on the hour
+      function updateHeatmap(hour) {
+        currentHour = hour;
+        const hourData = heatmapDayData[hour];
+        if (!hourData) return;
+
+        tiles.forEach((tile, idx) => {
+            const value = hourData[idx] ?? 0;
+            tile.style.backgroundColor = getHeatmapColor(value);
+            tile.dataset.value = value;
+            tile.title = `Tile ${idx + 1} @ ${String(hour).padStart(2, '0')}:00 - ${value}% usage`;
+        });
+
+        // Update time label and slider position
+        timeLabel.textContent = `${String(hour).padStart(2, '0')}:00`;
+        timeSlider.value = hour;
+      }
+
+      // 4. Event Listeners for controls
+      timeSlider.addEventListener('input', (e) => {
+        const newHour = parseInt(e.target.value, 10);
+        if (newHour !== currentHour) {
+          updateHeatmap(newHour);
+        }
+      });
+
+      playPauseBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        playPauseBtn.textContent = isPlaying ? '❚❚' : '▶';
+
+        if (isPlaying) {
+            animationInterval = setInterval(() => {
+                let nextHour = (currentHour + 1) % 24;
+                updateHeatmap(nextHour);
+            }, 200); // ~0.2 second per hour
+        } else {
+            clearInterval(animationInterval);
+        }
+      });
+      
+      // Add hover effect to tiles
+      tiles.forEach((tile, idx) => {
+        tile.addEventListener('mouseenter', () => {
+          tile.style.transform = 'scale(1.08)';
+          tile.style.boxShadow = '0 8px 26px rgba(0,0,0,0.45)';
+        });
+        tile.addEventListener('mouseleave', () => {
+          tile.style.transform = '';
+          tile.style.boxShadow = '';
+        });
+      });
+
+      // 5. Initial Render
+      updateHeatmap(currentHour);
+
+    })();
   });

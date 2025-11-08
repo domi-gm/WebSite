@@ -1,0 +1,190 @@
+/* Analytics page styles - reuse global site variables from `style.css` so the
+   analytics page matches the rest of the site (background, accents, text).
+   `style.css` defines --color-background-primary, --color-accent-grid,
+   --color-accent-solar, --color-text-secondary, etc. */
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  /* use the global site background so pages look consistent */
+  background: var(--color-background-primary);
+  color: #fff; /* force white text for analytics page */
+}
+
+/* Main layout specific to analytics page */
+.analytics-main{
+  padding:88px 40px 60px; /* allow for fixed header */
+  max-width:1280px;
+  margin:0 auto;
+  box-sizing:border-box;
+}
+
+/* Top two donut cards */
+.charts-grid-top{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:24px;
+  align-items:start;
+  margin-bottom:20px;
+}
+
+.chart-card{
+  /* subtle frosted card matching site theme */
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius:14px;
+  box-shadow: 0 6px 18px rgba(3,10,22,0.6);
+  padding:18px;
+  min-height:320px;
+  display:flex;
+  flex-direction:column;
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:6px;
+}
+.card-header i{ /* feather icons will replace <i> */
+  color:#fff;
+}
+.card-header h2{
+  font-size:1.05rem;
+  margin:0;
+  font-weight:600;
+  color: inherit;
+}
+
+.chart-container{
+  flex:1 1 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 4px;
+}
+.chart-container canvas{
+  width:100% !important;
+  height:100% !important;
+  max-width:420px;
+  max-height:260px;
+}
+
+.chart-legend{
+  margin-top:12px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.chart-legend .legend-item{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color:#fff;
+  font-size:0.92rem;
+}
+.chart-legend .swatch{
+  width:12px;
+  height:12px;
+  border-radius:3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Full-width bar chart */
+.chart-card.full-width{
+  grid-column:1 / -1;
+  min-height:340px;
+}
+
+.chart-card.full-width .chart-container canvas{
+  max-height:380px;
+}
+
+/* Achievements section */
+.achievements-section {
+  margin-top: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); /* match chart cards */
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+
+.achievements-section h2{
+  text-align:center;
+  margin:0 0 14px;
+  color:#fff;
+  font-size:1.05rem;
+}
+.achievements-grid{
+  display:grid;
+  gap:12px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.achievement-card{
+  /* use a subtle translucent card background so cards read as part of the dark theme */
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06));
+  border-radius:10px;
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  box-shadow: 0 4px 10px rgba(2,8,20,0.6);
+}
+.achievement-info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+.achievement-label{
+  font-size:0.95rem;
+  color:#fff;
+}
+.achievement-value{
+  font-weight:700;
+  color: inherit;
+}
+.progress-bar{
+  width:100%;
+  height:8px;
+  background:rgba(255,255,255,0.04);
+  border-radius:20px;
+  overflow:hidden;
+}
+.progress{
+  height:100%;
+  /* use the site's accent color (grid/accent) for progress */
+  background: var(--color-accent-grid);
+  border-radius:20px;
+  transition:width 500ms ease;
+}
+
+/* Small screens and adjustments */
+@media (max-width: 1024px){
+  .charts-grid-top{
+    grid-template-columns: 1fr 1fr;
+    gap:18px;
+  }
+  .analytics-main{padding:84px 28px 40px}
+  .achievements-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width: 767px){
+  .charts-grid-top{
+    grid-template-columns:1fr;
+  }
+  .chart-card.full-width{order:2}
+  .analytics-main{padding:84px 18px 32px}
+  .achievements-grid{grid-template-columns:1fr}
+  .chart-container canvas{max-width:100%}
+}
+
+/* small utility tweaks */
+.chart-caption{font-size:0.9rem;color:var(--color-text-secondary);}
+
+/* ensure legend swatches are accessible */
+.legend-label{color:var(--color-text-secondary);font-weight:500}

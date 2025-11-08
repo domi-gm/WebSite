@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- Load a modern UI font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="monitoring.css" />
+<title>Monitoring - Meevis Solar</title>
+</head>
+<body>
+
+<header class="site-header">
+  <!-- Logo + Username -->
+  <div class="logo-user">
+    <img src="logo.png" alt="Meevis Solar" class="logo-img">
+     <span class="username-text" id="username">No username</span>
+  </div>
+  </div>
+
+<div class="header-right">
+  <button id="connectBtn">Connect Pad</button>
+</div>
+
+  <!-- Centered nav -->
+  <nav class="main-nav" role="navigation" aria-label="Main">
+    <button onclick="location.href='index.html'">Overview</button>
+    <button onclick="location.href='analytics.html'">Analytics</button>
+    <button class="active" aria-current="page" onclick="location.href='Monitoring.html'">Monitoring</button>
+  </nav>
+</header>
+
+<main class="midi-grid-container">
+    <section class="panel panel-heatmap">
+      <h1 class="panel-title">Pad Activity Heatmap</h1>
+
+      <div class="heatmap-header">
+        <span class="heatmap-subtitle">Tile usage today</span>
+        <div class="heatmap-legend">
+          <span><span class="legend-color legend-low"></span>Low</span>
+          <span><span class="legend-color legend-medium"></span>Medium</span>
+          <span><span class="legend-color legend-high"></span>High</span>
+        </div>
+      </div>
+
+      <div class="heatmap-time-header">
+        <span id="heatmapCurrentTime">08:00</span>
+      </div>
+
+      <div class="heatmap-time-controls">
+        <button id="heatmapPlayPause">▶</button>
+        <input type="range" id="heatmapTimeSlider" min="0" max="23" value="8">
+      </div>
+
+      <div class="heatmap-wrapper">
+        <div class="heatmap-grid" role="grid">
+          <!-- 64 tiles (8x8) -->
+          <div class="heatmap-tile" data-index="0"></div>
+          <div class="heatmap-tile" data-index="1"></div>
+          <div class="heatmap-tile" data-index="2"></div>
+          <div class="heatmap-tile" data-index="3"></div>
+          <div class="heatmap-tile" data-index="4"></div>
+          <div class="heatmap-tile" data-index="5"></div>
+          <div class="heatmap-tile" data-index="6"></div>
+          <div class="heatmap-tile" data-index="7"></div>
+          <div class="heatmap-tile" data-index="8"></div>
+          <div class="heatmap-tile" data-index="9"></div>
+          <div class="heatmap-tile" data-index="10"></div>
+          <div class="heatmap-tile" data-index="11"></div>
+          <div class="heatmap-tile" data-index="12"></div>
+          <div class="heatmap-tile" data-index="13"></div>
+          <div class="heatmap-tile" data-index="14"></div>
+          <div class="heatmap-tile" data-index="15"></div>
+          <div class="heatmap-tile" data-index="16"></div>
+          <div class="heatmap-tile" data-index="17"></div>
+          <div class="heatmap-tile" data-index="18"></div>
+          <div class="heatmap-tile" data-index="19"></div>
+          <div class="heatmap-tile" data-index="20"></div>
+          <div class="heatmap-tile" data-index="21"></div>
+          <div class="heatmap-tile" data-index="22"></div>
+          <div class="heatmap-tile" data-index="23"></div>
+          <div class="heatmap-tile" data-index="24"></div>
+          <div class="heatmap-tile" data-index="25"></div>
+          <div class="heatmap-tile" data-index="26"></div>
+          <div class="heatmap-tile" data-index="27"></div>
+          <div class="heatmap-tile" data-index="28"></div>
+          <div class="heatmap-tile" data-index="29"></div>
+          <div class="heatmap-tile" data-index="30"></div>
+          <div class="heatmap-tile" data-index="31"></div>
+          <div class="heatmap-tile" data-index="32"></div>
+          <div class="heatmap-tile" data-index="33"></div>
+          <div class="heatmap-tile" data-index="34"></div>
+          <div class="heatmap-tile" data-index="35"></div>
+          <div class="heatmap-tile" data-index="36"></div>
+          <div class="heatmap-tile" data-index="37"></div>
+          <div class="heatmap-tile" data-index="38"></div>
+          <div class="heatmap-tile" data-index="39"></div>
+          <div class="heatmap-tile" data-index="40"></div>
+          <div class="heatmap-tile" data-index="41"></div>
+          <div class="heatmap-tile" data-index="42"></div>
+          <div class="heatmap-tile" data-index="43"></div>
+          <div class="heatmap-tile" data-index="44"></div>
+          <div class="heatmap-tile" data-index="45"></div>
+          <div class="heatmap-tile" data-index="46"></div>
+          <div class="heatmap-tile" data-index="47"></div>
+          <div class="heatmap-tile" data-index="48"></div>
+          <div class="heatmap-tile" data-index="49"></div>
+          <div class="heatmap-tile" data-index="50"></div>
+          <div class="heatmap-tile" data-index="51"></div>
+          <div class="heatmap-tile" data-index="52"></div>
+          <div class="heatmap-tile" data-index="53"></div>
+          <div class="heatmap-tile" data-index="54"></div>
+          <div class="heatmap-tile" data-index="55"></div>
+          <div class="heatmap-tile" data-index="56"></div>
+          <div class="heatmap-tile" data-index="57"></div>
+          <div class="heatmap-tile" data-index="58"></div>
+          <div class="heatmap-tile" data-index="59"></div>
+          <div class="heatmap-tile" data-index="60"></div>
+          <div class="heatmap-tile" data-index="61"></div>
+          <div class="heatmap-tile" data-index="62"></div>
+          <div class="heatmap-tile" data-index="63"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="eco-benefits-panel">
+      <h2 class="eco-title">Beneficii Ecologice</h2>
+      <div class="eco-cards-grid">
+        <div class="eco-card">
+          <div class="eco-value">142.5 <span class="eco-unit">kg CO₂</span></div>
+          <div class="eco-label">CO₂ Evitat</div>
+          <div class="eco-sub">≈ Emisiile unei mașini pe 620 km</div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-value">7.2 <span class="eco-unit">copaci</span></div>
+          <div class="eco-label">Copaci Plantați Echivalent</div>
+          <div class="eco-sub">≈ 1 an de absorbție CO₂</div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-value">85.3 <span class="eco-unit">kg</span></div>
+          <div class="eco-label">Cărbune Economisit</div>
+          <div class="eco-sub">≈ Energia pentru 28 de case/zi</div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-value">3.4 <span class="eco-unit">case</span></div>
+          <div class="eco-label">Case Alimentate/Zi</div>
+          <div class="eco-sub">≈ 12 persoane alimentate</div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-value">1,250 <span class="eco-unit">L</span></div>
+          <div class="eco-label">Litri Apă Economisiți</div>
+          <div class="eco-sub">≈ Folosirea centralei termice</div>
+        </div>
+
+        <div class="eco-card">
+          <div class="eco-value">34.8 <span class="eco-unit">L</span></div>
+          <div class="eco-label">Litri Petrol Economisiți</div>
+          <div class="eco-sub">≈ 450 km cu mașina</div>
+        </div>
+      </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
