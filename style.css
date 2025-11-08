@@ -23,8 +23,6 @@
   /* convenience alias for primary accent */
   --accent: var(--color-accent-grid);
 
-  /* Typography */
-  --font-sans: 'Bentham', serif;
   }
 
   *{box-sizing:border-box}

@@ -6,9 +6,12 @@
 html,body{
   height:100%;
   margin:0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-family:  'Inter', sans-serif;
   /* use the global site background so pages look consistent */
-  background: var(--color-background-primary);
+  background: url(back_pattern.jpg);
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: top left;
   color: #fff; /* force white text for analytics page */
 }
 
@@ -31,7 +34,7 @@ html,body{
 
 .chart-card{
   /* subtle frosted card matching site theme */
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  background: linear-gradient(180deg, #1b1b1b, #121212);
   border: 1px solid rgba(255,255,255,0.04);
   border-radius:14px;
   box-shadow: 0 6px 18px rgba(3,10,22,0.6);
@@ -106,7 +109,7 @@ html,body{
 /* Achievements section */
 .achievements-section {
   margin-top: 22px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); /* match chart cards */
+  background: linear-gradient(180deg, #1b1b1b, #121212); /* match chart cards */
   border-radius: 14px;
   padding: 18px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.6);

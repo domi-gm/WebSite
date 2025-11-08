@@ -6,7 +6,7 @@
 <!-- Load a modern UI font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css" />
-<title>Meevis Solar Panel</title>
+<title>Step2Step</title>
 </head>
 <body>
 
@@ -25,8 +25,8 @@
   <!-- Centered nav -->
   <nav class="main-nav" role="navigation" aria-label="Main">
     <button class="active">Overview</button>
-    <button>Analytics</button>
-    <button>Monitoring</button>
+    <button onclick="location.href='analytics.html'">Analytics</button>
+    <button onclick="location.href='Monitoring.html'">Monitoring</button>
   </nav>
 </header>
 
@@ -54,7 +54,7 @@
   <header class="card-top">
     <h3>Arduino Voltage</h3>
   </header>
-  <div class="metric" id="arduinoValue">-- V</div>
+  <div class="metric" id="arduinoValue">-- W</div>
   <div class="mini-chart">[Live]</div>
 </article>
  
@@ -261,19 +261,10 @@
   </div>
 </div>
 
-<!-- Username Overlay -->
-<div class="card-overlay" id="usernameOverlay">
-  <div class="popup-card">
-    <button class="closePopup">&times;</button>
-    <h3>Edit Username</h3>
-    <input type="text" id="usernameInput" placeholder="Enter new username">
-    <button id="saveUsername">Save</button>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
 <script src="app.js"></script>
 <script src="arduino.js"></script>
+<script src="user.js"></script>
 <script src="scroll.js"></script>
 </body>
 </html>
