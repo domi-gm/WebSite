@@ -37,7 +37,9 @@
     <img src="sidewalks.png" alt="Sidewalk" class="hero-img">
   </div>
   <div class="hero-content">
-    <h1 class="username-greeting">Welcome, <span id="usernameDisplay">User</span>!</h1>
+    <div class="greeting-inner">
+      <h1 class="username-greeting">Welcome, <span id="usernameDisplay">User</span>!</h1>
+    </div>
   </div>
 </section>
 
@@ -59,16 +61,20 @@
   
 
     <!-- Card 1: Power Generated Today -->
-    <article class="data-card popup-trigger" data-overlay="powerTodayOverlay" 
+    <article class="data-card popup-trigger power-today-card" data-overlay="powerTodayOverlay">
       <header class="card-top">
         <h3>Power generated today</h3>
       </header>
       <div class="metric-large">
-        <span class="handwritten">4.000</span> kWh
+        <div class="metric-main">
+          <span class="handwritten">4.000</span>
+          <span class="unit">kWh</span>
+        </div>
+        <div class="metric-sub">Since yesterday: <strong>+30%</strong></div>
       </div>
       <div class="card-footer">
-        <span class="trend up">↑ 30%</span>
-        <span class="trend down">↓ 20%</span>
+        <div class="chip up">↑ 30% vs yesterday</div>
+        <div class="chip muted">Peak: 1.2 kW</div>
       </div>
     </article>
 
@@ -130,8 +136,7 @@
     <!-- Card 5: Stored vs Used Energy -->
     <article class="data-card popup-trigger" data-overlay="storedUsedOverlay" id="stored-used-card">
       <header class="card-top">
-        <div class="lightning-icon"></div>
-      </header>
+        <h3>Stored vs Used Energy</h3>
       <div class="dual-metrics">
         <div class="metric-item">
           <h4>Stored Energy</h4>

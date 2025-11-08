@@ -3,6 +3,8 @@ document.addEventListener('scroll', () => {
   const hero = document.querySelector('.hero');
   const heroImg = document.querySelector('.hero-img');
   const heroContent = document.querySelector('.hero-content');
+  // inner element that handles vertical animation so horizontal centering isn't overwritten
+  const heroInner = document.querySelector('.greeting-inner');
   const lines = document.querySelectorAll('.line');
   const dataGrid = document.querySelector('.data-grid-container');
 
@@ -16,7 +18,8 @@ document.addEventListener('scroll', () => {
 
   // Image shrink (slightly eased feel)
   // start from a slightly smaller base scale so the hero doesn't feel blown-up on load
-  const BASE_SCALE = 0.97;
+  // match the CSS starting scale for a consistent feel
+  const BASE_SCALE = 0.75;
   // small easing to slow down the visible change near the start
   const easeOut = (t) => 1 - Math.pow(1 - t, 1.3);
   const eased = easeOut(progress);
@@ -30,9 +33,14 @@ document.addEventListener('scroll', () => {
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
   const TEXT_FADE_START = 0.75; // fraction of progress when text starts to fade
   const textLocal = clamp((progress - TEXT_FADE_START) / (1 - TEXT_FADE_START));
-  if (heroContent) {
+  if (heroInner) {
+    // animate the inner wrapper vertically while keeping the outer centered
+    heroInner.style.opacity = `${1 - textLocal}`;
+    heroInner.style.transform = `translateY(${(textLocal * -32).toFixed(2)}px)`;
+  } else if (heroContent) {
+    // fallback for older structure: apply transform on heroContent
     heroContent.style.opacity = `${1 - textLocal}`;
-    heroContent.style.transform = `translateY(${textLocal * -40}px)`;
+    heroContent.style.transform = `translateY(${(textLocal * -32).toFixed(2)}px)`;
   }
 
   // Lines fade in sequentially
@@ -69,18 +77,18 @@ document.addEventListener('scroll', () => {
         const local = clamp((dataProgress - stagger) / 0.9);
         const easedLocal = easeInOutCubic(local);
         card.style.opacity = `${easedLocal * easedGrid}`;
-        card.style.transform = `translateY(${(1 - easedLocal) * 24 + (1 - easedGrid) * 8}px)`;
+        card.style.transform = `translateY(${(1 - easedLocal) * 20 + (1 - easedGrid) * 8}px)`;
       });
     }
 
     // Play-mode trigger: when the grid reaches a small progress threshold, start the "play" animation
-    const PLAY_THRESHOLD = 0.12; // tune this value (0.12 works well for a visible trigger)
-    const RESET_THRESHOLD = 0.02; // below this we remove the play class so it can replay
+    const PLAY_THRESHOLD = 0.14; // when gridProgress crosses this going down we trigger play
     const isPlaying = dataGrid.classList.contains('play');
     if (gridProgress >= PLAY_THRESHOLD && !isPlaying) {
       // clear inline styles so CSS animation runs cleanly
       dataGrid.style.opacity = '';
       dataGrid.style.transform = '';
+      dataGrid.style.pointerEvents = 'auto';
       dataGrid.classList.add('play');
       // set per-card staggered animation delays via inline style for predictable timing
       const cards = dataGrid.querySelectorAll('.data-card');
@@ -93,7 +101,11 @@ document.addEventListener('scroll', () => {
         card.style.animationTimingFunction = 'cubic-bezier(0.22, 1, 0.36, 1)';
         card.style.animationFillMode = 'both';
       });
-    } else if (gridProgress <= RESET_THRESHOLD && isPlaying) {
+    }
+
+    // If the gridProgress drops below the play threshold (user scrolled back up), remove play
+    // so the animation can be triggered again on a subsequent scroll down.
+    else if (gridProgress < PLAY_THRESHOLD && isPlaying) {
       // remove play so it can replay when the user scrolls back down again
       dataGrid.classList.remove('play');
       const cards = dataGrid.querySelectorAll('.data-card');
@@ -103,7 +115,15 @@ document.addEventListener('scroll', () => {
         card.style.animationDuration = '';
         card.style.animationTimingFunction = '';
         card.style.animationFillMode = '';
+        // reset inline visibility/transform so scrubbing restarts from the top
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        // also remove visible class so CSS .visible doesn't keep it shown
+        card.classList.remove('visible');
       });
+      // reset container so the scrub path will bring it back in
+      dataGrid.style.opacity = '0';
+      dataGrid.style.transform = 'translateY(16px)';
     }
   }
 });
@@ -115,6 +135,9 @@ document.addEventListener('scroll', () => {
   if ('IntersectionObserver' in window) {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        // Ignore cards inside the main data grid; that grid is controlled by scroll.js (scrub/play)
+        if (entry.target.closest && entry.target.closest('.data-grid-container')) return;
+
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         } else {
