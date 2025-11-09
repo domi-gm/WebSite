@@ -26,23 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle username changes
-    const usernameElements = document.querySelectorAll('.username-text');
-    usernameElements.forEach(el => {
-        el.addEventListener('click', () => {
-            const newUsername = prompt('Enter your new username:', currentUsername || '');
-            if (newUsername !== null) {
-                currentUsername = newUsername.trim();
-                localStorage.setItem('username', currentUsername);
-                updateUsernameElements(currentUsername);
-                // Dispatch a storage event to notify other tabs/windows
-                window.dispatchEvent(new StorageEvent('storage', {
-                    key: 'username',
-                    newValue: currentUsername
-                }));
-            }
-        });
-    });
+
 
     // Handle "Connect Pad" button
     if (connectBtn) {

@@ -229,8 +229,12 @@
     <button class="closePopup">×</button>
     <h2>Stored vs Used Energy</h2>
     <div class="chart-row">
-        <canvas id="storedUsedDoughnutChart" height="120" width="120"></canvas>
-        <canvas id="storedEnergyLineChart" height="120"></canvas>
+        <div class="chart-container-line">
+            <canvas id="storedEnergyLineChart" height="120"></canvas>
+        </div>
+        <div class="chart-container-doughnut">
+            <canvas id="storedUsedDoughnutChart" height="120" width="120"></canvas>
+        </div>
     </div>
     <p>An explanation of stored vs. used energy.</p>
   </div>
@@ -258,6 +262,15 @@
     <button class="closePopup">×</button>
     <h2>Consumption Details</h2>
     <p>Graph and details here.</p>
+  </div>
+</div>
+<!-- Username Overlay -->
+<div class="card-overlay" id="usernameOverlay">
+  <div class="popup-card">
+    <button class="closePopup">&times;</button>
+    <h3>Edit Username</h3>
+    <input type="text" id="usernameInput" placeholder="Enter new username" style="width:100%; padding:8px; margin-top:12px; border-radius:6px; border:1px solid #ccc; font-size:14px;">
+    <button id="saveUsername" style="margin-top:12px; padding:8px 12px; border:none; background:var(--color-accent-solar); color:#fff; border-radius:6px; cursor:pointer;">Save</button>
   </div>
 </div>
 

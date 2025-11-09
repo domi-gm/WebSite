@@ -1,4 +1,7 @@
   document.addEventListener('DOMContentLoaded', () => {
+    // References to charts that need manual resizing when overlays open
+    let storedUsedDoughnutChartRef = null;
+    let storedEnergyLineChartRef = null;
     // Popup logic: click card to open overlay
     const popupCards = document.querySelectorAll('.popup-trigger');
 
@@ -36,6 +39,17 @@
           popupCard.style.left = `${(vw - targetWidth) / 2}px`;
           popupCard.style.width = `${targetWidth}px`;
           popupCard.style.height = `${targetHeight}px`;
+          // allow Chart.js to recalculate sizes after the popup animation completes
+          // timeout matches the CSS/JS transition (~350ms) used for the popup expansion
+          setTimeout(() => {
+            try {
+              if (storedUsedDoughnutChartRef && typeof storedUsedDoughnutChartRef.resize === 'function') storedUsedDoughnutChartRef.resize();
+              if (storedEnergyLineChartRef && typeof storedEnergyLineChartRef.resize === 'function') storedEnergyLineChartRef.resize();
+            } catch (e) {
+              // ignore resize errors silently
+              console.warn('Error resizing overlay charts', e);
+            }
+          }, 360);
         });
       };
 
@@ -90,10 +104,39 @@
       });
     }
 
+    
     // Username overlay logic
     const usernameText = document.getElementById('username');
-    const usernameOverlay = document.getElementById('usernameOverlay');
-    if (usernameText && usernameOverlay) {
+
+    // Utility: create username overlay dynamically if not present so any page can open it
+    function createUsernameOverlay() {
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      overlay.id = 'usernameOverlay';
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.innerHTML = `
+        <div class="popup-card">
+          <button class="closePopup" aria-label="Close username dialog">×</button>
+          <h2>Change username</h2>
+          <p style="margin:0 0 .6rem 0; color: #444;">Enter username</p>
+          <input id="usernameInput" type="text" placeholder="Your display name" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;" />
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+            <button id="saveUsername" style="padding:8px 12px; border-radius:8px; border:none; background:var(--color-accent-grid); color:#fff; font-weight:700;">Save</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      return overlay;
+    }
+
+    // If there's no usernameText on the page, nothing to wire
+    if (usernameText) {
+      // use existing overlay if present, otherwise create one
+      let usernameOverlay = document.getElementById('usernameOverlay');
+      if (!usernameOverlay) usernameOverlay = createUsernameOverlay();
+
+      // Remove any browser default tooltip/title for the username element
+      if (usernameText.hasAttribute('title')) usernameText.removeAttribute('title');
+
       const usernamePopupCard = usernameOverlay.querySelector('.popup-card');
       const usernameCloseBtn = usernameOverlay.querySelector('.closePopup');
       const saveUsernameBtn = document.getElementById('saveUsername');
@@ -103,11 +146,13 @@
 
       const openUsernameOverlay = () => {
         lastUsernameRect = usernameText.getBoundingClientRect();
-        usernameInput.value = usernameText.textContent === 'No username' ? '' : usernameText.textContent;
+        // prefill input from localStorage (most up-to-date source)
+        usernameInput.value = localStorage.getItem('username') || '';
 
         usernameOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
 
+        // start the popup from the small card rect so we can animate from it
         usernamePopupCard.style.top = `${lastUsernameRect.top}px`;
         usernamePopupCard.style.left = `${lastUsernameRect.left}px`;
         usernamePopupCard.style.width = `${lastUsernameRect.width}px`;
@@ -116,15 +161,26 @@
         usernameText.classList.add('selected');
 
         requestAnimationFrame(() => {
+          // mark expanded (controls opacity/pointer-events)
           usernamePopupCard.classList.add('expanded');
+
           const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
           const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          
-          const targetWidth = 320;
-          const targetHeight = 180;
 
-          usernamePopupCard.style.top = `${(vh - targetHeight) / 2}px`;
-          usernamePopupCard.style.left = `${(vw - targetWidth) / 2}px`;
+          // choose a comfortable width but not larger than available viewport
+          const targetWidth = Math.min(520, Math.floor(vw * 0.6));
+
+          // temporarily set width so scrollHeight measures correctly for content
+          usernamePopupCard.style.width = `${targetWidth}px`;
+          // allow browser to compute natural height for content
+          usernamePopupCard.style.height = 'auto';
+          const natural = usernamePopupCard.scrollHeight || 220;
+          const maxAllowed = Math.floor(vh * 0.85);
+          const targetHeight = Math.min(Math.max(natural + 24, 180), maxAllowed);
+
+          // center the popup using the measured height
+          usernamePopupCard.style.top = `${Math.max(12, Math.floor((vh - targetHeight) / 2))}px`;
+          usernamePopupCard.style.left = `${Math.max(12, Math.floor((vw - targetWidth) / 2))}px`;
           usernamePopupCard.style.width = `${targetWidth}px`;
           usernamePopupCard.style.height = `${targetHeight}px`;
         });
@@ -133,8 +189,10 @@
       const closeUsernameOverlay = () => {
         if (!lastUsernameRect) return;
 
+        // remove expanded state so opacity/pointer-events animate
         usernamePopupCard.classList.remove('expanded');
 
+        // animate back to original small card rect
         usernamePopupCard.style.top = `${lastUsernameRect.top}px`;
         usernamePopupCard.style.left = `${lastUsernameRect.left}px`;
         usernamePopupCard.style.width = `${lastUsernameRect.width}px`;
@@ -144,27 +202,42 @@
           usernameOverlay.classList.remove('active');
           usernameText.classList.remove('selected');
           document.body.style.overflow = '';
+          // clear inline width/height so future opens measure naturally
+          usernamePopupCard.style.width = '';
+          usernamePopupCard.style.height = '';
           usernamePopupCard.removeEventListener('transitionend', onTransitionEnd);
         };
         usernamePopupCard.addEventListener('transitionend', onTransitionEnd);
       };
 
       usernameText.addEventListener('click', openUsernameOverlay);
+      // also make username focusable for keyboard users
+      usernameText.setAttribute('tabindex', '0');
+      usernameText.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openUsernameOverlay(); } });
       if (usernameCloseBtn) usernameCloseBtn.addEventListener('click', closeUsernameOverlay);
       usernameOverlay.addEventListener('click', (e) => {
         if (e.target === usernameOverlay) closeUsernameOverlay();
       });
 
       if (saveUsernameBtn) saveUsernameBtn.addEventListener('click', () => {
-        if (usernameInput.value.trim()) {
-          usernameText.textContent = usernameInput.value;
+        const newName = usernameInput.value.trim();
+        // persist to localStorage so other pages/tabs receive the update
+        if (newName) {
+          localStorage.setItem('username', newName);
         } else {
-          usernameText.textContent = 'No username';
+          localStorage.removeItem('username');
         }
+
+        // update all username elements on this page immediately
+        document.querySelectorAll('.username-text').forEach(el => {
+          el.textContent = newName || 'No username';
+        });
+        const usernameDisplayEl = document.getElementById('usernameDisplay');
+        if (usernameDisplayEl) usernameDisplayEl.textContent = newName || 'User';
+
         closeUsernameOverlay();
       });
     }
-
     // Panel image zoom + annotation lines
     const panelImg = document.querySelector('.panel-img');
     const lines = document.querySelectorAll('.annotation-line');
@@ -296,19 +369,27 @@
 
     const storedUsedDoughnutCtx = document.getElementById('storedUsedDoughnutChart');
     if (storedUsedDoughnutCtx) {
-      new Chart(storedUsedDoughnutCtx, {
+      // create a larger, responsive doughnut that fills its container
+      storedUsedDoughnutChartRef = new Chart(storedUsedDoughnutCtx, {
         type: 'doughnut',
         data: { labels: ['Stored', 'Used'], datasets: [{ data: [350, 250], backgroundColor: ['#28a745', '#ffc107'] }] },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '55%',
+          radius: '80%',
+          plugins: { legend: { position: 'bottom' } }
+        }
       });
     }
 
     const storedEnergyLineCtx = document.getElementById('storedEnergyLineChart');
     if (storedEnergyLineCtx) {
-      new Chart(storedEnergyLineCtx, {
+      // keep a reference so we can resize after opening overlay
+      storedEnergyLineChartRef = new Chart(storedEnergyLineCtx, {
         type: 'line',
         data: { labels: ['-24h', '-20h', '-16h', '-12h', '-8h', '-4h', 'Now'], datasets: [{ label: 'Stored Energy (kWh)', data: [300, 310, 320, 310, 330, 340, 350], borderColor: '#28a745', tension: 0.4, fill: true }] },
-        options: { responsive: true, plugins: { legend: { display: false } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
     }
 

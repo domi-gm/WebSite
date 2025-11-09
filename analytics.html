@@ -16,7 +16,8 @@
     <header class="site-header">
         <div class="logo-user">
             <img src="logo.png" alt="Meevis Solar Logo" class="logo-img">
-            <span class="username-text">Thomas</span>
+            <!-- add id so app.js / user.js can target this element for username overlay and persistence -->
+            <span class="username-text" id="username">No username</span>
         </div>
 
         <nav class="main-nav" role="navigation" aria-label="Main">
@@ -129,5 +130,7 @@
         feather.replace();
     </script>
     <script src="analytics.js"></script>
+    <script src="app.js"></script>
+    <script src="user.js"></script>
 </body>
 </html>
